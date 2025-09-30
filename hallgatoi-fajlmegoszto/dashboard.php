@@ -16,6 +16,7 @@
                 <button class="nav-tab active" onclick="showDashboardSection('subjects')">Tárgyaim</button>
                 <button class="nav-tab" onclick="showDashboardSection('files')">Feltöltött fájljaim</button>
                 <button class="nav-tab" onclick="showDashboardSection('requests')">Kérelmeim</button>
+                <button class="nav-tab" onclick="showDashboardSection('chatrooms')">Chatszobáim</button>
             </div>
             <button class="btn btn-logout" onclick="logout()">Kijelentkezés</button>
         </header>
@@ -164,6 +165,86 @@
                                 <button class="btn btn-secondary btn-small" onclick="deleteMyRequest(event, this.parentElement.parentElement)">Törlés</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- My Chatrooms Section -->
+            <div id="chatroomsSection" class="dashboard-section">
+                <div class="my-requests-container">
+                    <div class="section-header">
+                        <h2>Saját chatszobáim</h2>
+                    </div>
+                    
+                    <div class="my-requests-grid" id="ownedChatroomsGrid">
+                        <div class="my-request-item owned-chatroom" onclick="window.location.href='chatroom.php?chatroom=laboratorium-1-megbeszeoles&subject=informatikai-alapok'">
+                            <div class="request-info">
+                                <h3>Laboratórium 1 megbeszélés</h3>
+                                <p class="request-description">Első labor feladatok megbeszélése és segítségkérés</p>
+                                <p class="request-meta">Létrehozva: 2024.09.25 • Informatikai alapok • 8 követő</p>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); if(confirm('Biztosan törölni szeretné ezt a chatszobát?')) { this.closest('.my-request-item').remove(); const grid = document.getElementById('ownedChatroomsGrid'); if(grid.children.length === 0) { grid.style.display = 'none'; document.getElementById('ownedChatroomsEmpty').style.display = 'block'; } alert('Chatszoba törölve!'); } return false;">Törlés</button>
+                            </div>
+                        </div>
+                        
+                        <div class="my-request-item owned-chatroom" onclick="window.location.href='chatroom.php?chatroom=zh-elokeszito-csoport&subject=programozas-alapjai'">
+                            <div class="request-info">
+                                <h3>ZH előkészítő csoport</h3>
+                                <p class="request-description">Közös tanulás és gyakorlás a következő ZH-ra</p>
+                                <p class="request-meta">Létrehozva: 2024.09.22 • Programozás alapjai • 12 követő</p>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); if(confirm('Biztosan törölni szeretné ezt a chatszobát?')) { this.closest('.my-request-item').remove(); const grid = document.getElementById('ownedChatroomsGrid'); if(grid.children.length === 0) { grid.style.display = 'none'; document.getElementById('ownedChatroomsEmpty').style.display = 'block'; } alert('Chatszoba törölve!'); } return false;">Törlés</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="ownedChatroomsEmpty" class="empty-state" style="display: none;">
+                        <p>Nem rendelkezik saját chatszobákkal.</p>
+                    </div>
+                    
+                    <div class="section-header" style="margin-top: 2rem;">
+                        <h2>Követett chatszobák</h2>
+                    </div>
+                    
+                    <div class="my-requests-grid" id="followedChatroomsGrid">
+                        <div class="my-request-item followed-chatroom" onclick="window.location.href='chatroom.php?chatroom=general&subject=informatikai-alapok'">
+                            <div class="request-info">
+                                <h3>Általános beszélgetés</h3>
+                                <p class="request-description">Általános beszélgetés a tárgyról és házi feladatokról</p>
+                                <p class="request-meta">Létrehozta: Nagy Péter • Informatikai alapok • 25 követő</p>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); if(confirm('Biztosan ki szeretne lépni ebből a chatszobából?')) { this.closest('.my-request-item').remove(); const grid = document.getElementById('followedChatroomsGrid'); if(grid.children.length === 0) { grid.style.display = 'none'; document.getElementById('followedChatroomsEmpty').style.display = 'block'; } alert('Kilépett a chatszobából!'); } return false;">Kilépés</button>
+                            </div>
+                        </div>
+                        
+                        <div class="my-request-item followed-chatroom" onclick="window.location.href='chatroom.php?chatroom=homework-help&subject=programozas-alapjai'">
+                            <div class="request-info">
+                                <h3>Házi feladat segítség</h3>
+                                <p class="request-description">Segítség kérése és adása házi feladatokkal kapcsolatban</p>
+                                <p class="request-meta">Létrehozta: Kiss Mária • Programozás alapjai • 18 követő</p>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); if(confirm('Biztosan ki szeretne lépni ebből a chatszobából?')) { this.closest('.my-request-item').remove(); const grid = document.getElementById('followedChatroomsGrid'); if(grid.children.length === 0) { grid.style.display = 'none'; document.getElementById('followedChatroomsEmpty').style.display = 'block'; } alert('Kilépett a chatszobából!'); } return false;">Kilépés</button>
+                            </div>
+                        </div>
+                        
+                        <div class="my-request-item followed-chatroom" onclick="window.location.href='chatroom.php?chatroom=exam-prep&subject=adatbazisok'">
+                            <div class="request-info">
+                                <h3>Vizsgafelkészítő</h3>
+                                <p class="request-description">Közös felkészülés a vizsgaidőszakra</p>
+                                <p class="request-meta">Létrehozta: Szabó János • Adatbázisok • 30 követő</p>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); if(confirm('Biztosan ki szeretne lépni ebből a chatszobából?')) { this.closest('.my-request-item').remove(); const grid = document.getElementById('followedChatroomsGrid'); if(grid.children.length === 0) { grid.style.display = 'none'; document.getElementById('followedChatroomsEmpty').style.display = 'block'; } alert('Kilépett a chatszobából!'); } return false;">Kilépés</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="followedChatroomsEmpty" class="empty-state" style="display: none;">
+                        <p>Nem követ chatszobákat.</p>
                     </div>
                 </div>
             </div>
@@ -364,5 +445,32 @@
     </div>
     
     <script src="script.js"></script>
+    
+    <style>
+        /* Ensure chatroom items are clickable with consistent hover effects */
+        .owned-chatroom, .followed-chatroom {
+            cursor: pointer;
+        }
+        
+        .owned-chatroom:hover, .followed-chatroom:hover {
+            border-left: 3px solid #3b82f6;
+        }
+        
+        /* Add space at the bottom of the page */
+        .dashboard-main {
+            padding-bottom: 3rem;
+        }
+        
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-style: italic;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
 </body>
 </html>

@@ -52,35 +52,81 @@ function hideAllForms() {
 
 // Login functionality
 function login() {
-    const email = document.getElementById('loginEmail').value;
+    const loginInput = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     
-    if (!email || !password) {
+    if (!loginInput || !password) {
         alert('Kérjük, töltse ki az összes mezőt!');
         return;
     }
     
+    // Validate Neptun code (6 characters, alphanumeric) or email
+    const isEmail = loginInput.includes('@');
+    const isValidNeptun = /^[A-Za-z0-9]{6}$/.test(loginInput);
+    
+    if (!isEmail && !isValidNeptun) {
+        alert('Érvénytelen Neptun kód vagy email cím! A Neptun kód pontosan 6 karakter hosszú, alfanumerikus kell legyen.');
+        return;
+    }
+    
+    if (isEmail && !loginInput.includes('.')) {
+        alert('Érvénytelen email cím formátum!');
+        return;
+    }
+    
     // Simulate login process
-    if (password.length >= 6 && (email.includes('@') || email.length >= 3)) {
+    if (password.length >= 6 && (isEmail || isValidNeptun)) {
         // Extract username for demo
-        currentUser = email.includes('@') ? email.split('@')[0] : email;
+        currentUser = isEmail ? loginInput.split('@')[0] : loginInput;
         alert('Sikeres bejelentkezés!');
         // Redirect to dashboard
         window.location.href = 'dashboard.php';
     } else {
-        alert('Hibás felhasználónév/email vagy jelszó!');
+        alert('Hibás Neptun kód/email vagy jelszó!');
     }
 }
 
 // Registration functionality
 function register() {
+    const neptun = document.getElementById('regNeptun').value;
     const username = document.getElementById('regUsername').value;
+    const fullName = document.getElementById('regFullName').value;
     const email = document.getElementById('regEmail').value;
     const password = document.getElementById('regPassword').value;
     const confirmPassword = document.getElementById('regConfirmPassword').value;
     
-    if (!username || !email || !password || !confirmPassword) {
+    if (!neptun || !username || !fullName || !email || !password || !confirmPassword) {
         alert('Kérjük, töltse ki az összes mezőt!');
+        return;
+    }
+    
+    // Validate Neptun code (exactly 6 alphanumeric characters)
+    if (!/^[A-Za-z0-9]{6}$/.test(neptun)) {
+        alert('A Neptun kódnak pontosan 6 karakter hosszúnak kell lennie és csak betűket és számokat tartalmazhat!');
+        return;
+    }
+    
+    // Validate username (minimum 3 characters)
+    if (username.length < 3) {
+        alert('A felhasználónévnek legalább 3 karakter hosszúnak kell lennie!');
+        return;
+    }
+    
+    // Validate full name (minimum 2 characters, should contain space)
+    if (fullName.length < 2) {
+        alert('Kérjük, adja meg a teljes nevét!');
+        return;
+    }
+    
+    // Validate email format
+    if (!email.includes('@') || !email.includes('.')) {
+        alert('Érvénytelen email cím formátum!');
+        return;
+    }
+    
+    // Validate password
+    if (password.length < 6) {
+        alert('A jelszónak legalább 6 karakter hosszúnak kell lennie!');
         return;
     }
     
@@ -89,18 +135,8 @@ function register() {
         return;
     }
     
-    if (password.length < 6) {
-        alert('A jelszónak legalább 6 karakter hosszúnak kell lennie!');
-        return;
-    }
-    
-    if (!email.includes('@')) {
-        alert('Érvénytelen email cím!');
-        return;
-    }
-    
     // Simulate registration process
-    alert('Sikeres regisztráció! Most bejelentkezhet a fiókjával.');
+    alert('Sikeres regisztráció! Most bejelentkezhet a Neptun kódjával vagy email címével.');
     showLoginForm();
 }
 
@@ -607,6 +643,79 @@ function showUploadFileModal() {
     document.getElementById('uploadFileModal').style.display = 'block';
 }
 
+// Show create chatroom modal
+function showCreateChatroomModal() {
+    document.getElementById('createChatroomModal').style.display = 'block';
+}
+
+// Close create chatroom modal
+function closeCreateChatroomModal() {
+    document.getElementById('createChatroomModal').style.display = 'none';
+    // Clear form
+    document.getElementById('chatroomTitle').value = '';
+    document.getElementById('chatroomDescription').value = '';
+}
+
+// Join a chatroom
+function joinChatroom(chatroomId) {
+    const currentSubject = localStorage.getItem('currentSubject') || 'informatikai-alapok';
+    window.location.href = `chatroom.php?chatroom=${chatroomId}&subject=${currentSubject}`;
+}
+
+// Toggle follow status for a chatroom
+function toggleChatroomFollow(chatroomId, button) {
+    const isFollowing = button.classList.contains('following');
+    
+    if (isFollowing) {
+        button.classList.remove('following');
+        button.textContent = '+ Követés';
+    } else {
+        button.classList.add('following');
+        button.textContent = '✓ Követve';
+    }
+}
+
+// Create a new chatroom
+function createChatroom() {
+    const title = document.getElementById('chatroomTitle').value.trim();
+    const description = document.getElementById('chatroomDescription').value.trim();
+    
+    if (!title) {
+        alert('Kérem, adja meg a chatszoba címét!');
+        return;
+    }
+    
+    // Generate a simple ID from the title
+    const chatroomId = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    
+    // Create new chatroom card
+    const chatroomsList = document.getElementById('chatroomsList');
+    const newChatroomCard = document.createElement('div');
+    newChatroomCard.className = 'file-item';
+    newChatroomCard.onclick = function() { joinChatroom(chatroomId); };
+    
+    newChatroomCard.innerHTML = `
+        <div class="file-info">
+            <h3>${title}</h3>
+            <p class="file-name">${description || 'Nincs leírás megadva'}</p>
+            <p class="file-meta">1 követő</p>
+        </div>
+        <div class="file-actions">
+            <button class="btn btn-secondary following" onclick="event.stopPropagation(); toggleChatroomFollow('${chatroomId}', this)">
+                ✓ Követve
+            </button>
+        </div>
+    `;
+    
+    chatroomsList.appendChild(newChatroomCard);
+    closeCreateChatroomModal();
+    
+    // Join the new chatroom
+    setTimeout(() => {
+        joinChatroom(chatroomId);
+    }, 500);
+}
+
 // Close upload file modal
 function closeUploadFileModal() {
     document.getElementById('uploadFileModal').style.display = 'none';
@@ -777,6 +886,13 @@ function deleteMyRequest(event, requestElement) {
         requestElement.remove();
         alert('Kérelem sikeresen törölve!');
     }
+}
+
+// Chatroom functions are now handled with inline JavaScript in the HTML
+
+// Open chatroom functionality
+function openChatroom(chatroomId, subjectId) {
+    window.location.href = `chatroom.php?chatroom=${chatroomId}&subject=${subjectId}`;
 }
 
 // Show my file details (dashboard version - no rating)
@@ -1303,3 +1419,21 @@ function submitRating() {
 function downloadFile() {
     alert('Fájl letöltése megkezdődött!');
 }
+
+// Event listeners for modal functionality
+window.addEventListener('click', function(event) {
+    const createChatroomModal = document.getElementById('createChatroomModal');
+    
+    if (event.target === createChatroomModal) {
+        closeCreateChatroomModal();
+    }
+});
+
+// Handle Enter key in create chatroom modal
+document.addEventListener('keydown', function(event) {
+    const modal = document.getElementById('createChatroomModal');
+    if (modal && modal.style.display === 'block' && event.key === 'Enter') {
+        event.preventDefault();
+        createChatroom();
+    }
+});

@@ -6,9 +6,9 @@
     <title>Hallgatói Fájlmegosztó - Széchenyi István Egyetem</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="index-page">
-    <div class="container">
-        <div class="login-container">
+<body>
+    <div class="container" style="display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding-top: 5vh;">
+        <div class="login-container" style="margin: 0; width: 100%; max-width: 400px;">
             <div class="header">
                 <h1>Hallgatói Fájlmegosztó</h1>
                 <p class="subtitle">Széchenyi István Egyetem</p>
@@ -19,7 +19,7 @@
                 <h2>Bejelentkezés</h2>
                 <form class="form">
                     <div class="input-group">
-                        <input type="text" id="loginEmail" placeholder="Felhasználónév vagy Email cím" required>
+                        <input type="text" id="loginEmail" placeholder="Neptun kód vagy Email cím" required>
                     </div>
                     <div class="input-group">
                         <input type="password" id="loginPassword" placeholder="Jelszó" required>
@@ -37,7 +37,13 @@
                 <h2>Regisztráció</h2>
                 <form class="form">
                     <div class="input-group">
+                        <input type="text" id="regNeptun" placeholder="Neptun kód" required>
+                    </div>
+                    <div class="input-group">
                         <input type="text" id="regUsername" placeholder="Felhasználónév" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="regFullName" placeholder="Teljes név" required>
                     </div>
                     <div class="input-group">
                         <input type="email" id="regEmail" placeholder="Email cím" required>

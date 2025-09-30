@@ -125,37 +125,50 @@
             <!-- Chat Section -->
             <div id="chatSection" class="section">
                 <div class="section-header">
-                    <h2>Chatszoba</h2>
-                    <div class="online-count">
-                        <span class="online-indicator"></span>
-                        <span>3 online</span>
+                    <h2>Chatszobák</h2>
+                    <div class="header-controls">
+                        <button class="btn btn-primary" onclick="showCreateChatroomModal()">Új chatszoba létrehozása</button>
                     </div>
                 </div>
                 
-                <div class="chat-container">
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="message">
-                            <div class="message-author">Kiss János</div>
-                            <div class="message-content">Sziasztok! Van valakinek ötlete az első ZH 3. feladatához?</div>
-                            <div class="message-time">14:32</div>
+                <div class="files-grid" id="chatroomsList">
+                    <div class="file-item" onclick="joinChatroom('general')">
+                        <div class="file-info">
+                            <h3>Általános beszélgetés</h3>
+                            <p class="file-name">Általános beszélgetés a tárgyról és házi feladatokról</p>
+                            <p class="file-meta">12 követő</p>
                         </div>
-                        
-                        <div class="message">
-                            <div class="message-author">Nagy Péter</div>
-                            <div class="message-content">Igen, azt rekurzióval kell megoldani. Ha akarod, tudok segíteni.</div>
-                            <div class="message-time">14:35</div>
-                        </div>
-                        
-                        <div class="message own">
-                            <div class="message-author">Te</div>
-                            <div class="message-content">Én is érdeklődnék a megoldás iránt!</div>
-                            <div class="message-time">14:38</div>
+                        <div class="file-actions">
+                            <button class="btn btn-secondary following" onclick="event.stopPropagation(); toggleChatroomFollow('general', this)">
+                                ✓ Követve
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="chat-input-container">
-                        <input type="text" id="chatInput" placeholder="Írj egy üzenetet..." onkeypress="handleChatKeyPress(event)">
-                        <button class="btn btn-primary" onclick="sendMessage()">Küldés</button>
+                    <div class="file-item" onclick="joinChatroom('homework-help')">
+                        <div class="file-info">
+                            <h3>Házi feladat segítség</h3>
+                            <p class="file-name">Segítség kérése és adása a házi feladatokhoz</p>
+                            <p class="file-meta">8 követő</p>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); toggleChatroomFollow('homework-help', this)">
+                                + Követés
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="file-item" onclick="joinChatroom('exam-prep')">
+                        <div class="file-info">
+                            <h3>Vizsgafelkészülés</h3>
+                            <p class="file-name">Közös tanulás és vizsgafelkészülés</p>
+                            <p class="file-meta">15 követő</p>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn btn-secondary following" onclick="event.stopPropagation(); toggleChatroomFollow('exam-prep', this)">
+                                ✓ Követve
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -268,8 +281,121 @@
         </div>
     </div>
     
+    <!-- Create Chatroom Modal -->
+    <div id="createChatroomModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Új chatszoba létrehozása</h2>
+                <span class="close" onclick="closeCreateChatroomModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form class="upload-form">
+                    <div class="input-group">
+                        <label for="chatroomTitle">Chatszoba címe:</label>
+                        <input type="text" id="chatroomTitle" placeholder="pl. Laboratórium 1 megbeszélés" required maxlength="50">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="chatroomDescription">Rövid leírás:</label>
+                        <textarea id="chatroomDescription" placeholder="Írja le röviden, miről szól ez a chatszoba..." rows="3" maxlength="200"></textarea>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-primary" onclick="createChatroom()">Chatszoba létrehozása</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeCreateChatroomModal()">Mégse</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
     <script>
+
+
+        // ===== CHATROOM FUNCTIONS =====
+        function showCreateChatroomModal() {
+            document.getElementById('createChatroomModal').style.display = 'block';
+        }
+
+        function closeCreateChatroomModal() {
+            document.getElementById('createChatroomModal').style.display = 'none';
+            document.getElementById('chatroomTitle').value = '';
+            document.getElementById('chatroomDescription').value = '';
+        }
+
+        function joinChatroom(chatroomId) {
+            const currentSubject = localStorage.getItem('currentSubject') || 'informatikai-alapok';
+            window.location.href = `chatroom.php?chatroom=${chatroomId}&subject=${currentSubject}`;
+        }
+
+        function toggleChatroomFollow(chatroomId, button) {
+            const isFollowing = button.classList.contains('following');
+            
+            if (isFollowing) {
+                button.classList.remove('following');
+                button.textContent = '+ Követés';
+            } else {
+                button.classList.add('following');
+                button.textContent = '✓ Követve';
+            }
+        }
+
+        function createChatroom() {
+            const title = document.getElementById('chatroomTitle').value.trim();
+            const description = document.getElementById('chatroomDescription').value.trim();
+            
+            if (!title) {
+                alert('Kérem, adja meg a chatszoba címét!');
+                return;
+            }
+            
+            const chatroomId = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+            
+            const chatroomsList = document.getElementById('chatroomsList');
+            const newChatroomCard = document.createElement('div');
+            newChatroomCard.className = 'file-item';
+            newChatroomCard.onclick = function() { joinChatroom(chatroomId); };
+            
+            newChatroomCard.innerHTML = `
+                <div class="file-info">
+                    <h3>${title}</h3>
+                    <p class="file-name">${description || 'Nincs leírás megadva'}</p>
+                    <p class="file-meta">1 követő</p>
+                </div>
+                <div class="file-actions">
+                    <button class="btn btn-secondary following" onclick="event.stopPropagation(); toggleChatroomFollow('${chatroomId}', this)">
+                        ✓ Követve
+                    </button>
+                </div>
+            `;
+            
+            chatroomsList.appendChild(newChatroomCard);
+            closeCreateChatroomModal();
+        }
+
+        // Handle hash navigation to chatrooms
+        function handleHashNavigation() {
+            if (window.location.hash === '#chatrooms') {
+                // Switch to chat section manually (replicating showSection logic)
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Show chat section and activate chat tab
+                const chatSection = document.getElementById('chatSection');
+                const chatTab = document.querySelector('button[onclick="showSection(\'chat\')"]');
+                
+                if (chatSection && chatTab) {
+                    chatSection.classList.add('active');
+                    chatTab.classList.add('active');
+                }
+            }
+        }
+
         // Make subject page dynamic based on URL or localStorage
         document.addEventListener('DOMContentLoaded', function() {
             const subjectData = {
@@ -305,7 +431,23 @@
                 document.getElementById('requestCount').textContent = subject.requests + ' kérelem';
                 document.title = subject.title + ' - Hallgatói Fájlmegosztó';
             }
+            
+            // Handle hash navigation after page loads
+            setTimeout(handleHashNavigation, 100); // Small delay to ensure DOM is ready
         });
+        
+        // Handle hash changes (e.g., when navigating back from chatroom)
+        window.addEventListener('hashchange', handleHashNavigation);
+        
+        // Also handle when page loads with hash
+        window.addEventListener('load', handleHashNavigation);
     </script>
+    
+    <style>
+        /* Add bottom spacing to chatrooms list */
+        #chatroomsList {
+            padding-bottom: 2rem;
+        }
+    </style>
 </body>
 </html>

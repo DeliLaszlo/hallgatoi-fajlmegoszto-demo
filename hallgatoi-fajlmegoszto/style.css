@@ -31,6 +31,8 @@ body {
     padding: 20px;
 }
 
+
+
 /* ===== BUTTONS ===== */
 .btn {
     padding: 12px 24px;
@@ -100,17 +102,9 @@ body {
 }
 
 /* ===== INDEX PAGE STYLES ===== */
-body.index-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    overflow: hidden; /* Prevent scrolling on index page */
-}
-
 .login-container {
     max-width: 400px;
+    margin: 100px auto;
     background: var(--background-white);
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -400,25 +394,54 @@ body.index-page {
     background: var(--background-white);
     border-radius: 12px;
     padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.my-request-item.fulfilled {
     cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
 }
 
-.my-request-item.fulfilled:hover {
+.my-request-item:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-color: var(--accent-blue);
+    border: 2px solid var(--accent-blue);
 }
+
+
 
 .my-request-item .request-info {
     flex: 1;
+}
+
+/* Delete chatroom button - same as subject delete */
+.delete-chatroom-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.my-request-item:hover .delete-chatroom-btn {
+    opacity: 1;
+}
+
+.delete-chatroom-btn:hover {
+    background: #b91c1c;
+    transform: scale(1.1);
 }
 
 .my-request-item .request-actions {
@@ -426,6 +449,36 @@ body.index-page {
     flex-direction: column;
     align-items: flex-end;
     gap: 8px;
+}
+
+/* Chatroom delete button - copy of subject delete but for my-request-item */
+.my-request-item .delete-subject-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 1;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.my-request-item:hover .delete-subject-btn {
+    opacity: 1;
+}
+
+.my-request-item .delete-subject-btn:hover {
+    background: #b91c1c;
+    transform: scale(1.1);
 }
 
 /* ===== SUBJECT PAGE STYLES ===== */
@@ -1122,3 +1175,123 @@ body.index-page {
         width: 95%;
     }
 }
+
+/* ===== CHATROOM SPECIFIC STYLES ===== */
+.btn-secondary.following {
+    background-color: var(--success-green);
+    color: white;
+    border-color: var(--success-green);
+}
+
+.btn-secondary.following:hover {
+    background-color: #059669;
+    border-color: #059669;
+}
+
+/* Adjust file-item layout for chatrooms without icons */
+.files-grid .file-item .file-info {
+    margin-left: 0;
+    flex: 1;
+}
+
+/* Chatroom template specific styles */
+.nav-tab-info {
+    color: var(--text-light);
+    font-size: 16px;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    cursor: default;
+}
+
+.section-title {
+    flex: 1;
+}
+
+.section-title h2 {
+    margin: 0 0 4px 0;
+    color: var(--text-dark);
+}
+
+.section-title p {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-controls .online-count {
+    color: var(--success-green);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+#followBtn.following {
+    background-color: var(--success-green);
+    color: white;
+    border-color: var(--success-green);
+}
+
+#followBtn.following:hover {
+    background-color: #059669;
+    border-color: #059669;
+}
+
+/* Create chatroom form styles */
+.create-chatroom-form .input-group {
+    margin-bottom: 20px;
+}
+
+.create-chatroom-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.create-chatroom-form input,
+.create-chatroom-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-gray);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.create-chatroom-form input:focus,
+.create-chatroom-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
+
+/* Notification styles */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #10b981;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
